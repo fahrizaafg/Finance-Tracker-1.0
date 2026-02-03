@@ -36,6 +36,18 @@ export default defineConfig({
       }
     })
   ],
+  build: {
+    chunkSizeWarningLimit: 1000, // Naikkan limit warning ke 1000kb (1MB)
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          charts: ['recharts'],
+          icons: ['@phosphor-icons/react']
+        }
+      }
+    }
+  },
   server: {
     host: true // Mengizinkan akses dari network/HP
   }
