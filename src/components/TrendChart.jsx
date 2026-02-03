@@ -1,8 +1,7 @@
 import { useMemo } from "react";
 import {
-  BarChart,
-  Bar,
-  Cell,
+  AreaChart,
+  Area,
   XAxis,
   Tooltip,
   ResponsiveContainer,
@@ -45,14 +44,20 @@ const TrendChart = ({ transactions }) => {
   return (
     <div>
       <div className="flex justify-between items-end mb-3">
-        <h3 className="font-bold text-slate-800">Analisis Pengeluaran</h3>
-        <span className="text-xs text-slate-500 bg-white px-2 py-1 rounded-full border">
+        <h3 className="font-bold text-slate-100">Analisis Pengeluaran</h3>
+        <span className="text-xs text-slate-400 bg-surface-light px-2 py-1 rounded-full border border-slate-700">
           7 Hari Terakhir
         </span>
       </div>
-      <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm h-48">
+      <div className="bg-surface-light p-4 rounded-2xl border border-slate-700 shadow-sm h-48">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={chartData}>
+          <AreaChart data={chartData}>
+            <defs>
+              <linearGradient id="colorAmount" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
+                <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+              </linearGradient>
+            </defs>
             <XAxis 
               dataKey="day" 
               axisLine={false} 
@@ -61,20 +66,19 @@ const TrendChart = ({ transactions }) => {
               dy={10}
             />
             <Tooltip 
-              cursor={{ fill: '#f1f5f9', radius: 4 }}
-              contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+              cursor={{ stroke: '#3b82f6', strokeWidth: 1, strokeDasharray: '5 5' }}
+              contentStyle={{ backgroundColor: '#1e293b', borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', color: '#f1f5f9' }}
               formatter={(value) => [`Rp ${new Intl.NumberFormat("id-ID").format(value)}`, 'Pengeluaran']}
             />
-            <Bar dataKey="amount" radius={[4, 4, 4, 4]}>
-              {chartData.map((entry, index) => (
-                <Cell 
-                  key={`cell-${index}`} 
-                  fill={entry.amount === maxAmount && entry.amount > 0 ? '#6366f1' : '#e0e7ff'} 
-                  className="transition-all duration-300 hover:opacity-80"
-                />
-              ))}
-            </Bar>
-          </BarChart>
+            <Area 
+              type="monotone" 
+              dataKey="amount" 
+              stroke="#3b82f6" 
+              strokeWidth={3}
+              fillOpacity={1} 
+              fill="url(#colorAmount)" 
+            />
+          </AreaChart>
         </ResponsiveContainer>
       </div>
     </div>

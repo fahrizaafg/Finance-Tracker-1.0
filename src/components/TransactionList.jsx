@@ -20,14 +20,14 @@ const getCategoryStyle = (category) => {
     case "Makan":
       return { 
         icon: Hamburger, 
-        bg: "bg-indigo-100", 
-        text: "text-indigo-600" 
+        bg: "bg-primary/10", 
+        text: "text-primary" 
       };
     case "Transport":
       return { 
         icon: Bus, 
-        bg: "bg-blue-100", 
-        text: "text-blue-600" 
+        bg: "bg-cyan-100", 
+        text: "text-cyan-600" 
       };
     case "Jajan":
       return { 
@@ -50,15 +50,15 @@ const getCategoryStyle = (category) => {
     case "Gaji":
       return { 
         icon: Money, 
-        bg: "bg-emerald-100", 
-        text: "text-emerald-600" 
+        bg: "bg-emerald-custom/10", 
+        text: "text-emerald-custom" 
       };
     case "Lainnya":
     default:
       return { 
         icon: category === "Lainnya" ? Gift : Plus, 
-        bg: "bg-slate-100", 
-        text: "text-slate-600" 
+        bg: "bg-slate-700", 
+        text: "text-slate-400" 
       };
   }
 };
@@ -68,10 +68,10 @@ const TransactionList = ({ transactions, formatRupiah, onDelete, onEdit, onViewA
 
   if (transactions.length === 0) {
     return (
-      <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-        <h2 className="text-lg font-bold mb-4">Transaksi Terakhir</h2>
-        <EmptyState />
-      </div>
+      <div className="bg-surface-light p-6 rounded-2xl shadow-sm border border-slate-700">
+      <h2 className="text-lg font-bold mb-4 text-white">Transaksi Terakhir</h2>
+      <EmptyState />
+    </div>
     );
   }
 
@@ -84,15 +84,15 @@ const TransactionList = ({ transactions, formatRupiah, onDelete, onEdit, onViewA
   const displayedTransactions = limit ? filteredTransactions.slice(0, limit) : filteredTransactions;
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+    <div className="bg-surface-light p-6 rounded-2xl shadow-sm border border-slate-700">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-bold">
+        <h2 className="text-lg font-bold text-white">
           {limit ? "Transaksi Terakhir" : "Daftar Transaksi"}
         </h2>
         {limit && (
           <button 
             onClick={onViewAll}
-            className="text-sm text-indigo-600 font-semibold hover:text-indigo-800"
+            className="text-sm text-primary font-semibold hover:text-primary-dark"
           >
             Lihat Semua
           </button>
@@ -108,7 +108,7 @@ const TransactionList = ({ transactions, formatRupiah, onDelete, onEdit, onViewA
             placeholder="Cari transaksi..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-100 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all"
+            className="w-full pl-10 pr-4 py-2 bg-background-light border border-slate-700 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-primary focus:bg-surface-light transition-all placeholder:text-slate-500"
           />
         </div>
       )}
@@ -129,7 +129,7 @@ const TransactionList = ({ transactions, formatRupiah, onDelete, onEdit, onViewA
             return (
               <div
                 key={item.id}
-                className="group bg-white p-3 rounded-xl border border-slate-100 shadow-sm flex items-center gap-3 relative overflow-hidden"
+                className="group bg-surface-light p-3 rounded-xl border border-slate-700 shadow-sm flex items-center gap-3 relative overflow-hidden"
               >
                 <div
                   className={`w-10 h-10 rounded-full flex items-center justify-center ${bg} ${text}`}
@@ -137,7 +137,7 @@ const TransactionList = ({ transactions, formatRupiah, onDelete, onEdit, onViewA
                   <Icon size={20} weight="fill" />
                 </div>
                 <div className="flex-1">
-                  <p className="font-semibold text-sm text-slate-800">
+                  <p className="font-semibold text-sm text-white">
                     {item.title}
                   </p>
                   <p className="text-xs text-slate-400">{dateStr}</p>
@@ -146,7 +146,7 @@ const TransactionList = ({ transactions, formatRupiah, onDelete, onEdit, onViewA
                 <div className="flex flex-col items-end">
                   <p
                     className={`font-bold text-sm ${
-                      item.type === "income" ? "text-emerald-500" : "text-rose-500"
+                      item.type === "income" ? "text-emerald-custom" : "text-rose-custom"
                     }`}
                   >
                     {item.type === "income" ? "+" : "-"}
@@ -157,14 +157,14 @@ const TransactionList = ({ transactions, formatRupiah, onDelete, onEdit, onViewA
                 <div className="flex gap-1 ml-2">
                    <button 
                     onClick={() => onEdit && onEdit(item)}
-                    className="p-2 text-slate-300 hover:text-indigo-500 transition-colors"
+                    className="p-2 text-slate-300 hover:text-primary transition-colors"
                     title="Edit Transaksi"
                   >
                     <PencilSimple size={18} />
                   </button>
                   <button 
                     onClick={() => onDelete && onDelete(item.id)}
-                    className="p-2 text-slate-300 hover:text-rose-500 transition-colors"
+                    className="p-2 text-slate-300 hover:text-rose-custom transition-colors"
                     title="Hapus Transaksi"
                   >
                     <Trash size={18} />

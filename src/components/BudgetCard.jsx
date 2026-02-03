@@ -28,9 +28,9 @@ const BudgetCard = ({ transactions, formatRupiah }) => {
   const percentage = Math.min((currentMonthExpense / budget) * 100, 100);
   
   // Tentukan warna progress bar
-  let progressColor = "bg-green-500";
+  let progressColor = "bg-emerald-custom";
   if (percentage > 75) progressColor = "bg-yellow-500";
-  if (percentage > 90) progressColor = "bg-red-500";
+  if (percentage > 90) progressColor = "bg-rose-custom";
 
   const handleSave = () => {
     setBudget(tempBudget);
@@ -38,15 +38,15 @@ const BudgetCard = ({ transactions, formatRupiah }) => {
   };
 
   return (
-    <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+    <div className="bg-surface-light p-4 rounded-2xl shadow-sm border border-slate-700">
       <div className="flex justify-between items-center mb-2">
-        <h3 className="text-sm font-semibold text-slate-700">Budget Bulan Ini</h3>
+        <h3 className="text-sm font-semibold text-slate-200">Budget Bulan Ini</h3>
         <button 
           onClick={() => {
             if (isEditing) handleSave();
             else setIsEditing(true);
           }}
-          className="text-slate-400 hover:text-indigo-600"
+          className="text-slate-400 hover:text-primary"
         >
           {isEditing ? <Check size={18} weight="bold" /> : <PencilSimple size={18} weight="bold" />}
         </button>
@@ -54,29 +54,29 @@ const BudgetCard = ({ transactions, formatRupiah }) => {
 
       <div className="flex justify-between items-end mb-2">
         <div>
-          <p className="text-xs text-slate-500">Terpakai</p>
-          <p className={`font-bold ${percentage > 90 ? "text-red-500" : "text-slate-800"}`}>
+          <p className="text-xs text-slate-400">Terpakai</p>
+          <p className={`font-bold ${percentage > 90 ? "text-rose-custom" : "text-slate-100"}`}>
             {formatRupiah(currentMonthExpense)}
           </p>
         </div>
         <div className="text-right">
-          <p className="text-xs text-slate-500">Target</p>
+          <p className="text-xs text-slate-400">Target</p>
           {isEditing ? (
             <input
               type="number"
               value={tempBudget}
               onChange={(e) => setTempBudget(Number(e.target.value))}
-              className="w-24 text-right text-sm font-bold border-b border-indigo-300 focus:outline-none"
+              className="w-24 text-right text-sm font-bold border-b border-primary/50 focus:outline-none bg-transparent text-white"
               autoFocus
             />
           ) : (
-            <p className="font-bold text-slate-800">{formatRupiah(budget)}</p>
+            <p className="font-bold text-slate-100">{formatRupiah(budget)}</p>
           )}
         </div>
       </div>
 
       {/* Progress Bar */}
-      <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+      <div className="w-full bg-slate-700 rounded-full h-2.5 overflow-hidden">
         <div 
           className={`h-2.5 rounded-full transition-all duration-500 ${progressColor}`} 
           style={{ width: `${percentage}%` }}

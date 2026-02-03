@@ -2,8 +2,8 @@ import { useMemo } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
 
 const COLORS = {
-  Makan: "#4f46e5", // Indigo
-  Transport: "#2563eb", // Blue
+  Makan: "#1919e6", // Primary
+  Transport: "#06b6d4", // Cyan
   Jajan: "#9333ea", // Purple
   Tagihan: "#ea580c", // Orange
   Hiburan: "#db2777", // Pink
@@ -37,11 +37,11 @@ const Statistics = ({ transactions, formatRupiah }) => {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
-        <h3 className="font-bold text-slate-800 mb-4 text-center">Pengeluaran per Kategori</h3>
+      <div className="bg-surface-light p-4 rounded-2xl shadow-sm border border-slate-700">
+        <h3 className="font-bold text-white mb-4 text-center">Pengeluaran per Kategori</h3>
         
         {data.length === 0 ? (
-           <p className="text-center text-slate-400 text-sm py-10">Belum ada data pengeluaran</p>
+           <p className="text-center text-slate-500 text-sm py-10">Belum ada data pengeluaran</p>
         ) : (
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
@@ -54,6 +54,7 @@ const Statistics = ({ transactions, formatRupiah }) => {
                   outerRadius={80}
                   paddingAngle={5}
                   dataKey="value"
+                  stroke="none"
                 >
                   {data.map((entry, index) => (
                     <Cell 
@@ -64,9 +65,10 @@ const Statistics = ({ transactions, formatRupiah }) => {
                 </Pie>
                 <Tooltip 
                   formatter={(value) => formatRupiah(value)}
-                  contentStyle={{ borderRadius: "8px", border: "none", boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)" }}
+                  contentStyle={{ backgroundColor: '#1e293b', borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', color: '#f1f5f9' }}
+                  itemStyle={{ color: '#f1f5f9' }}
                 />
-                <Legend />
+                <Legend iconType="circle" />
               </PieChart>
             </ResponsiveContainer>
           </div>
@@ -75,22 +77,22 @@ const Statistics = ({ transactions, formatRupiah }) => {
 
       {/* Detail List */}
       <div className="space-y-3">
-        <h3 className="font-bold text-slate-800">Detail Pengeluaran</h3>
+        <h3 className="font-bold text-white">Detail Pengeluaran</h3>
         {data.map((item) => (
           <div 
             key={item.name}
-            className="bg-white p-3 rounded-xl border border-slate-100 shadow-sm flex items-center justify-between"
+            className="bg-surface-light p-3 rounded-xl border border-slate-700 shadow-sm flex items-center justify-between"
           >
             <div className="flex items-center gap-3">
               <div 
                 className="w-3 h-3 rounded-full" 
                 style={{ backgroundColor: COLORS[item.name] || COLORS.Lainnya }}
               ></div>
-              <span className="text-sm font-semibold text-slate-700">{item.name}</span>
+              <span className="text-sm font-semibold text-slate-300">{item.name}</span>
             </div>
             <div className="flex flex-col items-end">
-              <span className="text-sm font-bold text-slate-800">{formatRupiah(item.value)}</span>
-              <span className="text-xs text-slate-400">
+              <span className="text-sm font-bold text-white">{formatRupiah(item.value)}</span>
+              <span className="text-xs text-slate-500">
                 {((item.value / totalExpense) * 100).toFixed(1)}%
               </span>
             </div>

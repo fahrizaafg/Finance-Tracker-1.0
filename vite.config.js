@@ -10,8 +10,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
       manifest: {
-        name: 'Aplikasi Keuangan',
-        short_name: 'Keuangan',
+        name: 'Dompetku',
+        short_name: 'Dompetku',
         description: 'Aplikasi pencatat keuangan pribadi',
         theme_color: '#ffffff',
         background_color: '#ffffff',
