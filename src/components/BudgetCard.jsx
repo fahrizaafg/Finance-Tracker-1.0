@@ -3,7 +3,7 @@ import { PencilSimple, Check } from "@phosphor-icons/react";
 
 const BudgetCard = ({ transactions, formatRupiah }) => {
   const [budget, setBudget] = useState(() => {
-    return parseInt(localStorage.getItem("monthly_budget")) || 5000000;
+    return parseInt(localStorage.getItem("monthly_budget")) || 0;
   });
   const [isEditing, setIsEditing] = useState(false);
   const [tempBudget, setTempBudget] = useState(budget);
