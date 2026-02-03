@@ -2,7 +2,7 @@ import { House, ListDashes, ChartPieSlice, Gear, PlusCircle } from "@phosphor-ic
 
 const BottomNav = ({ activeTab, onTabChange, onAddClick }) => {
   return (
-    <nav className="bg-white border-t border-slate-100 fixed bottom-0 w-full max-w-md h-16 flex justify-around items-center px-2 z-10 pb-1">
+    <nav className="bg-white border-t border-slate-100 fixed bottom-0 w-full max-w-md flex justify-around items-center px-2 z-10 pb-[calc(env(safe-area-inset-bottom)+4px)] pt-2">
       <button
         onClick={() => onTabChange("dashboard")}
         className={`flex flex-col items-center gap-1 p-2 ${
