@@ -10,6 +10,7 @@ import BottomNav from "./components/BottomNav";
 import AddTransactionModal from "./components/AddTransactionModal";
 import Statistics from "./components/Statistics";
 import Settings from "./components/Settings";
+import LoginScreen from "./components/LoginScreen"; // Import LoginScreen
 
 
 // Helper untuk format Rupiah
@@ -26,38 +27,36 @@ function App() {
   const [editingTransaction, setEditingTransaction] = useState(null);
   const [filterType, setFilterType] = useState("all"); // all, week, month
   const [currentView, setCurrentView] = useState("dashboard"); // dashboard, all_transactions, statistics, settings
+  
+  // State untuk nama user
+  const [userName, setUserName] = useState(() => localStorage.getItem("user_name") || "");
 
   // 1. State untuk menyimpan daftar transaksi
-  // Inisialisasi dari LocalStorage jika ada, jika tidak pakai dummy
+  // Inisialisasi dari LocalStorage jika ada, jika tidak kosong
   const [transactions, setTransactions] = useState(() => {
     const savedTransactions = localStorage.getItem("transactions");
     if (savedTransactions) {
       return JSON.parse(savedTransactions);
     }
-    return [
-      {
-        id: 1,
-        title: "Makan Siang",
-        category: "Makan",
-        date: new Date().toISOString(),
-        amount: 25000,
-        type: "expense",
-      },
-      {
-        id: 2,
-        title: "Gaji Bulanan",
-        category: "Gaji",
-        date: new Date(Date.now() - 86400000).toISOString(),
-        amount: 5000000,
-        type: "income",
-      },
-    ];
+    return []; // Kosong untuk user baru
   });
 
   // Simpan ke LocalStorage setiap kali transactions berubah
   useEffect(() => {
     localStorage.setItem("transactions", JSON.stringify(transactions));
   }, [transactions]);
+
+  // Jika belum ada user name, tampilkan login screen
+  if (!userName) {
+    return (
+      <LoginScreen 
+        onLogin={(name) => {
+          localStorage.setItem("user_name", name);
+          setUserName(name);
+        }} 
+      />
+    );
+  }
 
   // Filter Logic
   const filteredTransactions = transactions.filter((t) => {
@@ -144,7 +143,7 @@ function App() {
       <div className="w-full max-w-md bg-slate-50 min-h-screen relative shadow-2xl flex flex-col pb-24">
         {currentView === "dashboard" && (
           <>
-            <Header />
+            <Header userName={userName} />
             
             <main className="flex-1 overflow-y-auto px-6 pt-4 space-y-6">
               {/* Filter Section */}
