@@ -8,10 +8,12 @@ import TransactionList from "./components/TransactionList";
 import BottomNav from "./components/BottomNav";
 import Sidebar from "./components/Sidebar";
 
+import DebtList from "./components/DebtList";
 import AddTransactionModal from "./components/AddTransactionModal";
 import Statistics from "./components/Statistics";
 import Settings from "./components/Settings";
 import LoginScreen from "./components/LoginScreen"; // Import LoginScreen
+import RealtimeClock from "./components/RealtimeClock";
 
 
 // Helper untuk format Rupiah
@@ -44,10 +46,24 @@ function App() {
     return []; // Kosong untuk user baru
   });
 
+  // State untuk menyimpan daftar hutang
+  const [debts, setDebts] = useState(() => {
+    const savedDebts = localStorage.getItem("debts");
+    if (savedDebts) {
+      return JSON.parse(savedDebts);
+    }
+    return [];
+  });
+
   // Simpan ke LocalStorage setiap kali transactions berubah
   useEffect(() => {
     localStorage.setItem("transactions", JSON.stringify(transactions));
   }, [transactions]);
+
+  // Simpan ke LocalStorage setiap kali debts berubah
+  useEffect(() => {
+    localStorage.setItem("debts", JSON.stringify(debts));
+  }, [debts]);
 
   // Jika belum ada user name, tampilkan login screen
   if (!userName) {
@@ -140,6 +156,86 @@ function App() {
     setEditingTransaction(null);
   };
 
+  // 6. Logic Hutang
+  const handleAddDebt = (newDebt) => {
+    // 1. Tambah ke state debts
+    // Pastikan history diinisialisasi
+    const debtWithHistory = {
+      ...newDebt,
+      history: [
+        {
+          id: Date.now(),
+          date: debtDate.toISOString(), // Gunakan debtDate yang sudah ada jamnya
+          amount: newDebt.amount,
+          type: "initial", // initial debt creation
+        }
+      ]
+    };
+    
+    setDebts([debtWithHistory, ...debts]);
+
+    // 2. Tambah ke transaksi otomatis
+    // Gabungkan tanggal yang dipilih dengan jam saat ini agar tidak default ke 00:00 / 07:00
+    const now = new Date();
+    const debtDate = new Date(newDebt.date);
+    debtDate.setHours(now.getHours(), now.getMinutes(), now.getSeconds());
+
+    const transaction = {
+      id: Date.now(),
+      date: debtDate.toISOString(),
+      amount: newDebt.amount,
+      type: newDebt.type === "payable" ? "income" : "expense", // Hutang = Masuk (Income), Piutang = Keluar (Expense)
+      category: newDebt.type === "payable" ? "Hutang" : "Piutang",
+      note: newDebt.type === "payable" ? `Pinjam dari ${newDebt.name}` : `Pinjamkan ke ${newDebt.name}`,
+    };
+    setTransactions([transaction, ...transactions]);
+  };
+
+  const handlePayDebt = (debtId, amount) => {
+    // 1. Update status hutang
+    const updatedDebts = debts.map((debt) => {
+      if (debt.id === debtId) {
+        const newPaidAmount = debt.paidAmount + amount;
+        return {
+          ...debt,
+          paidAmount: newPaidAmount,
+          status: newPaidAmount >= debt.amount ? "paid" : "unpaid",
+          history: [
+            ...(debt.history || []), // Handle legacy data without history
+            {
+              id: Date.now(),
+              date: new Date().toISOString(), // Gunakan full ISO string
+              amount: amount,
+              type: "payment",
+            }
+          ]
+        };
+      }
+      return debt;
+    });
+    setDebts(updatedDebts);
+
+    // 2. Catat transaksi pembayaran
+    const debt = debts.find((d) => d.id === debtId);
+    if (debt) {
+      const transaction = {
+        id: Date.now(),
+        date: new Date().toISOString(), // Gunakan full ISO string agar jam tercatat realtime
+        amount: amount,
+        type: debt.type === "payable" ? "expense" : "income", // Bayar Hutang = Keluar, Terima Piutang = Masuk
+        category: debt.type === "payable" ? "Bayar Hutang" : "Terima Piutang",
+        note: debt.type === "payable" ? `Bayar ke ${debt.name}` : `Diterima dari ${debt.name}`,
+      };
+      setTransactions([transaction, ...transactions]);
+    }
+  };
+
+  const handleDeleteDebt = (id) => {
+    if (window.confirm("Yakin ingin menghapus data hutang ini?")) {
+      setDebts(debts.filter((d) => d.id !== id));
+    }
+  };
+
   return (
     <div className="bg-background-light flex h-screen text-slate-100 font-sans overflow-hidden">
       {/* Desktop Sidebar - Hidden on Mobile */}
@@ -171,6 +267,7 @@ function App() {
                 <div>
                   <h1 className="text-2xl font-bold text-white">Dashboard</h1>
                   <p className="text-slate-400 text-sm">Selamat datang kembali, {userName}</p>
+                  <RealtimeClock />
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="text-right hidden lg:block">
@@ -345,6 +442,31 @@ function App() {
                       setUserPhoto(photo);
                       localStorage.setItem("user_photo", photo);
                     }}
+                  />
+                </div>
+              </main>
+            </>
+          )}
+
+          {currentView === "debts" && (
+            <>
+              <div className="bg-background-light px-6 md:px-8 py-4 shadow-sm z-10 sticky top-0 border-b border-slate-800 md:border-none md:pt-8">
+                 <button 
+                  onClick={() => setCurrentView("dashboard")}
+                  className="p-2 -ml-2 rounded-full hover:bg-slate-800 transition-colors text-white md:hidden inline-block mr-2"
+                >
+                  <CaretLeft size={24} weight="bold" />
+                </button>
+                <h1 className="text-lg md:text-2xl font-bold text-white inline-block">Manajemen Hutang</h1>
+              </div>
+              <main className="flex-1 overflow-y-auto px-6 md:px-8 pt-4 space-y-6 custom-scrollbar pb-24 md:pb-8">
+                <div className="md:max-w-4xl">
+                  <DebtList 
+                    debts={debts}
+                    onAddDebt={handleAddDebt}
+                    onPayDebt={handlePayDebt}
+                    onDeleteDebt={handleDeleteDebt}
+                    formatRupiah={formatRupiah}
                   />
                 </div>
               </main>

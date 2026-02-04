@@ -1,9 +1,10 @@
-import { House, ListDashes, ChartPieSlice, Gear, Plus, Wallet } from "@phosphor-icons/react";
+import { House, ListDashes, ChartPieSlice, Gear, Plus, Wallet, HandCoins } from "@phosphor-icons/react";
 
 const Sidebar = ({ activeTab, onTabChange, onAddClick }) => {
   const navItems = [
     { id: "dashboard", label: "Dashboard", icon: House },
     { id: "all_transactions", label: "Transaksi", icon: ListDashes },
+    { id: "debts", label: "Hutang", icon: HandCoins },
     { id: "statistics", label: "Statistik", icon: ChartPieSlice },
     { id: "settings", label: "Pengaturan", icon: Gear },
   ];
@@ -55,7 +56,7 @@ const Sidebar = ({ activeTab, onTabChange, onAddClick }) => {
       {/* Footer Info */}
       <div className="mt-8 text-center">
         <p className="text-[10px] text-slate-600">
-          &copy; 2024 Dompetku App
+          &copy; 2026 Dompetku App
         </p>
       </div>
     </aside>

@@ -1,4 +1,4 @@
-import { House, ListDashes, ChartPieSlice, Gear, PlusCircle } from "@phosphor-icons/react";
+import { House, ListDashes, ChartPieSlice, Gear, PlusCircle, HandCoins } from "@phosphor-icons/react";
 
 const BottomNav = ({ activeTab, onTabChange, onAddClick }) => {
   return (
@@ -32,15 +32,15 @@ const BottomNav = ({ activeTab, onTabChange, onAddClick }) => {
       </button>
 
       <button
-        onClick={() => onTabChange("statistics")}
+        onClick={() => onTabChange("debts")}
         className={`flex flex-col items-center gap-1 p-2 transition-colors ${
-          activeTab === "statistics" ? "text-primary" : "text-slate-500 hover:text-slate-300"
+          activeTab === "debts" ? "text-primary" : "text-slate-500 hover:text-slate-300"
         }`}
       >
-        <ChartPieSlice size={24} weight={activeTab === "statistics" ? "fill" : "regular"} />
-        <span className="text-[10px] font-medium">Statistik</span>
+        <HandCoins size={24} weight={activeTab === "debts" ? "fill" : "regular"} />
+        <span className="text-[10px] font-medium">Hutang</span>
       </button>
-      
+
       <button
         onClick={() => onTabChange("settings")}
         className={`flex flex-col items-center gap-1 p-2 transition-colors ${

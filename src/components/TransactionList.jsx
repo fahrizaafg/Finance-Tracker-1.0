@@ -10,6 +10,10 @@ import {
   Trash,
   PencilSimple,
   MagnifyingGlass,
+  HandCoins,
+  ArrowCircleUp,
+  ArrowCircleDown,
+  Bank
 } from "@phosphor-icons/react";
 import EmptyState from "./EmptyState";
 import { useState } from "react";
@@ -53,6 +57,30 @@ const getCategoryStyle = (category) => {
         bg: "bg-emerald-custom/10", 
         text: "text-emerald-custom" 
       };
+    case "Hutang":
+      return { 
+        icon: HandCoins, 
+        bg: "bg-red-500/10", 
+        text: "text-red-500" 
+      };
+    case "Piutang":
+      return { 
+        icon: HandCoins, 
+        bg: "bg-green-500/10", 
+        text: "text-green-500" 
+      };
+    case "Bayar Hutang":
+      return { 
+        icon: ArrowCircleUp, 
+        bg: "bg-blue-500/10", 
+        text: "text-blue-500" 
+      };
+    case "Terima Piutang":
+      return { 
+        icon: ArrowCircleDown, 
+        bg: "bg-emerald-500/10", 
+        text: "text-emerald-500" 
+      };
     case "Lainnya":
     default:
       return { 
@@ -76,10 +104,14 @@ const TransactionList = ({ transactions, formatRupiah, onDelete, onEdit, onViewA
   }
 
   // Filter pencarian
-  const filteredTransactions = transactions.filter((t) =>
-    t.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    t.category.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredTransactions = transactions.filter((t) => {
+    const title = t.title || t.note || ""; // Fallback jika title kosong, gunakan note
+    const category = t.category || "";
+    const search = searchQuery.toLowerCase();
+    
+    return title.toLowerCase().includes(search) ||
+           category.toLowerCase().includes(search);
+  });
 
   const displayedTransactions = limit ? filteredTransactions.slice(0, limit) : filteredTransactions;
 
@@ -138,7 +170,7 @@ const TransactionList = ({ transactions, formatRupiah, onDelete, onEdit, onViewA
                 </div>
                 <div className="flex-1">
                   <p className="font-semibold text-sm text-white">
-                    {item.title}
+                    {item.title || item.note}
                   </p>
                   <p className="text-xs text-slate-400">{dateStr}</p>
                 </div>
